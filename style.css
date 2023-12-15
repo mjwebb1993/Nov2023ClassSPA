@@ -20,6 +20,17 @@
   border-radius: 10px;
 }
 
+.active {
+  background-color: blue;
+  border: none;
+}
+
+.active a {
+  color: white;
+}
+
+
+
 form {
   border: solid 1px black;
   display: flex;
