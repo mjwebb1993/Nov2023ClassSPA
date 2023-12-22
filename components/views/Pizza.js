@@ -11,11 +11,15 @@ export default state => html`
     </tr>
     ${state.pizzas
       .map(pizza => {
-        return `<tr><td>${pizza.crust}</td><td>${pizza.cheese}</td><td>${
-          pizza.sauce
-        }</td><td>${pizza.toppings.join(" & ")}</td><td>${
-          pizza.customer
-        }</td></tr>`;
+        return html`
+          <tr>
+            <td>${pizza.crust}</td>
+            <td>${pizza.cheese}</td>
+            <td>${pizza.sauce}</td>
+            <td>${pizza.toppings.join(" & ")}</td>
+            <td>${pizza.customer}</td>
+          </tr>
+        `;
       })
       .join("")}
   </table>

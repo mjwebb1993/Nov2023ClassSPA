@@ -15,14 +15,41 @@ function render(state = store.Home) {
   `;
 
   router.updatePageLinks();
-  afterRender();
+  afterRender(state);
 }
 
-function afterRender() {
+function afterRender(state) {
   // add menu toggle to bars icon in nav bar
   document.querySelector(".fa-bars").addEventListener("click", () => {
     document.querySelector("nav > ul").classList.toggle("hidden--mobile");
   });
+
+  if (state.view === "Home") {
+    // Do this stuff
+    document.getElementById("callToAction").addEventListener("click", event => {
+      event.preventDefault();
+
+      router.navigate("/pizza");
+    });
+  }
+
+  if (state.view === "Order") {
+    document.querySelector("form").addEventListener("submit", event => {
+      event.preventDefault();
+
+      store.Pizza.pizzas.push({
+        crust: event.target.elements.crust.value,
+        cheese: event.target.elements.cheese.value,
+        customer: event.target.elements.customer.value,
+        sauce: event.target.elements.sauce.value,
+        toppings: []
+      });
+
+      console.log(store.Pizza.pizzas);
+
+      router.navigate("/Pizza");
+    });
+  }
 }
 
 router.hooks({
@@ -56,11 +83,11 @@ router.hooks({
 
             // An alternate method would be to store the values independently
             /*
-      store.Home.weather.city = response.data.name;
-      store.Home.weather.temp = kelvinToFahrenheit(response.data.main.temp);
-      store.Home.weather.feelsLike = kelvinToFahrenheit(response.data.main.feels_like);
-      store.Home.weather.description = response.data.weather[0].main;
-      */
+            store.Home.weather.city = response.data.name;
+            store.Home.weather.temp = kelvinToFahrenheit(response.data.main.temp);
+            store.Home.weather.feelsLike = kelvinToFahrenheit(response.data.main.feels_like);
+            store.Home.weather.description = response.data.weather[0].main;
+            */
             done();
           })
           .catch(err => {
@@ -75,7 +102,8 @@ router.hooks({
         axios
           .get(`${process.env.PIZZA_PLACE_API_URL}/pizzas`)
           .then(response => {
-            // We need to store the response to the state, in the next step but in the meantime let's see what it looks like so that we know what to store from the response.
+            // We need to store the response to the state, in the next step but in the meantime
+            //   let's see what it looks like so that we know what to store from the response.
             console.log("response", response.data);
             store.Pizza.pizzas = response.data;
 
@@ -85,6 +113,19 @@ router.hooks({
             console.log("It puked", error);
             done();
           });
+        break;
+      case "Products":
+        axios.get("https://fakestoreapi.com/products").then(response => {
+          // store.Products.products = response.data.map(product => {
+          //   return {
+          //     title: product.title + " matsinet",
+          //     image: product.image
+          //   };
+          // });
+          store.Products.products = response.data;
+
+          done();
+        });
         break;
       default:
         done();
