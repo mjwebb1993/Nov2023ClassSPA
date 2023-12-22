@@ -29,7 +29,9 @@
   color: white;
 }
 
-
+#callToAction {
+  cursor: pointer;
+}
 
 form {
   border: solid 1px black;
