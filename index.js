@@ -37,8 +37,10 @@ function afterRender(state) {
     document.querySelector("form").addEventListener("submit", event => {
       event.preventDefault();
 
+      let inputs = event.target.elements;
+
       store.Pizza.pizzas.push({
-        crust: event.target.elements.crust.value,
+        crust: inputs.crust.value,
         cheese: event.target.elements.cheese.value,
         customer: event.target.elements.customer.value,
         sauce: event.target.elements.sauce.value,
