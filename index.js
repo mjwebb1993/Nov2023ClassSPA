@@ -55,7 +55,7 @@ function afterRender(state) {
 }
 
 router.hooks({
-  before: (done, params) => {
+  before: async (done, params) => {
     // We need to know what view we are on to know what data to fetch
     const view =
       params && params.data && params.data.view
@@ -116,19 +116,24 @@ router.hooks({
             done();
           });
         break;
-      case "Products":
+      case "Products": {
+        // try {
+        //   const response = await axios.get("https://fakestoreapi.com/products");
+
+        //   store.Products.products = response.data;
+
+        //   done();
+        // } catch (error) {
+        //   console.error(error.message);
+        // }
+
         axios.get("https://fakestoreapi.com/products").then(response => {
-          // store.Products.products = response.data.map(product => {
-          //   return {
-          //     title: product.title + " matsinet",
-          //     image: product.image
-          //   };
-          // });
           store.Products.products = response.data;
 
           done();
         });
         break;
+      }
       default:
         done();
     }
