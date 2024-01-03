@@ -5,3 +5,4 @@ export { default as Pizza } from "./Pizza";
 export { default as Viewnotfound } from "./Viewnotfound";
 export { default as Links } from "./Links";
 export { default as Products } from "./Products";
+export { default as Global } from "./Global";

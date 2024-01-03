@@ -1,3 +1,4 @@
+import html from "html-literal";
 import { Header, Nav, Main, Footer } from "./components";
 import * as store from "./store";
 import Navigo from "navigo";
@@ -7,11 +8,10 @@ import axios from "axios";
 const router = new Navigo("/");
 
 function render(state = store.Home) {
-  document.querySelector("#root").innerHTML = `
-    ${Header(state)}
-    ${Nav(store.Links, state)}
-    ${Main(state)}
-    ${Footer()}
+  document.querySelector("#root").innerHTML = html`
+    <div class="${store.Global.brand}">
+      ${Header(state)} ${Nav(store.Links, state)} ${Main(state)} ${Footer()}
+    </div>
   `;
 
   router.updatePageLinks();
@@ -22,6 +22,16 @@ function afterRender(state) {
   // add menu toggle to bars icon in nav bar
   document.querySelector(".fa-bars").addEventListener("click", () => {
     document.querySelector("nav > ul").classList.toggle("hidden--mobile");
+  });
+
+  document.getElementById("brand").addEventListener("change", event => {
+    event.preventDefault();
+
+    console.log("matsinet-index.js:30-event.target.value:", event.target.value);
+
+    store.Global.brand = event.target.value;
+
+    router.navigate("/");
   });
 
   if (state.view === "Home") {

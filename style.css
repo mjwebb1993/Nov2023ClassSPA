@@ -1,3 +1,15 @@
+.default h1 {
+  color: red;
+}
+
+.brandGreen h1 {
+  color: green;
+}
+
+.brandBlue h1 {
+  color: blue;
+}
+
 #jumbotron {
   background: url(assets/img/wavey-grid.jpg) center center no-repeat;  background-size: cover;
   display: flex;
