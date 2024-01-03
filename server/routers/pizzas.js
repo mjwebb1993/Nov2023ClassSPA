@@ -6,6 +6,7 @@ const router = Router();
 // Create pizza route handles "/pizzas/"
 router.post("/", async (request, response) => {
   try {
+    console.log("matsinet-pizzas.js:9-request.body:", request.body);
     const newPizza = new Pizza(request.body);
 
     const data = await newPizza.save();
@@ -13,10 +14,55 @@ router.post("/", async (request, response) => {
     response.json(data);
   } catch (error) {
     // Output error to the console incase it fails to send in response
-    console.log(error);
+    // console.log(error);
 
     if ("name" in error && error.name === "ValidationError")
       return response.status(400).json(error.errors);
+
+    return response.status(500).json(error.errors);
+  }
+});
+
+// Get all pizzas route
+router.get("/", async (request, response) => {
+  try {
+    // Store the query params into a JavaScript Object
+    const query = request.query; // Defaults to an empty object {}
+
+    const data = await Pizza.find(query);
+
+    response.json(data);
+  } catch (error) {
+    // Output error to the console incase it fails to send in response
+    console.log(error);
+
+    return response.status(500).json(error.errors);
+  }
+});
+
+// Get a single pizza by ID
+router.get("/:id", async (request, response) => {
+  try {
+    const data = await Pizza.findById(request.params.id);
+
+    response.json(data);
+  } catch (error) {
+    // Output error to the console incase it fails to send in response
+    console.log(error);
+
+    return response.status(500).json(error.errors);
+  }
+});
+
+// Delete a pizza by ID
+router.delete("/:id", async (request, response) => {
+  try {
+    const data = await Pizza.findByIdAndRemove(request.params.id, {});
+
+    response.json(data);
+  } catch (error) {
+    // Output error to the console incase it fails to send in response
+    console.log(error);
 
     return response.status(500).json(error.errors);
   }
