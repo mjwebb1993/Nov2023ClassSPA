@@ -34,22 +34,49 @@ function afterRender(state) {
   }
 
   if (state.view === "Order") {
+    // Add an event handler for the submit button on the form
     document.querySelector("form").addEventListener("submit", event => {
       event.preventDefault();
 
-      let inputs = event.target.elements;
+      // Get the form element
+      const inputList = event.target.elements;
+      console.log("Input Element List", inputList);
 
-      store.Pizza.pizzas.push({
-        crust: inputs.crust.value,
-        cheese: event.target.elements.cheese.value,
-        customer: event.target.elements.customer.value,
-        sauce: event.target.elements.sauce.value,
-        toppings: []
-      });
+      // Create an empty array to hold the toppings
+      const toppings = [];
 
-      console.log(store.Pizza.pizzas);
+      // Iterate over the toppings array
 
-      router.navigate("/Pizza");
+      for (let input of inputList.toppings) {
+        // If the value of the checked attribute is true then add the value to the toppings array
+        if (input.checked) {
+          toppings.push(input.value);
+        }
+      }
+
+      // Create a request body object to send to the API
+      const requestData = {
+        customer: inputList.customer.value,
+        crust: inputList.crust.value,
+        cheese: inputList.cheese.value,
+        sauce: inputList.sauce.value,
+        toppings: toppings
+      };
+      // Log the request body to the console
+      console.log("request Body", requestData);
+
+      axios
+        // Make a POST request to the API to create a new pizza
+        .post(`${process.env.PIZZA_PLACE_API_URL}/pizzas`, requestData)
+        .then(response => {
+          //  Then push the new pizza onto the Pizza state pizzas attribute, so it can be displayed in the pizza list
+          store.Pizza.pizzas.push(response.data);
+          router.navigate("/Pizza");
+        })
+        // If there is an error log it to the console
+        .catch(error => {
+          console.log("It puked", error);
+        });
     });
   }
 }

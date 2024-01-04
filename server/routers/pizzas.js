@@ -6,7 +6,6 @@ const router = Router();
 // Create pizza route handles "/pizzas/"
 router.post("/", async (request, response) => {
   try {
-    console.log("matsinet-pizzas.js:9-request.body:", request.body);
     const newPizza = new Pizza(request.body);
 
     const data = await newPizza.save();
@@ -63,6 +62,40 @@ router.delete("/:id", async (request, response) => {
   } catch (error) {
     // Output error to the console incase it fails to send in response
     console.log(error);
+
+    return response.status(500).json(error.errors);
+  }
+});
+
+// Update a single pizza by ID
+router.put("/:id", async (request, response) => {
+  try {
+    const body = request.body;
+
+    const data = await Pizza.findByIdAndUpdate(
+      request.params.id,
+
+      {
+        $set: {
+          crust: body.crust,
+          cheese: body.cheese,
+          sauce: body.sauce,
+          toppings: body.toppings
+        }
+      },
+
+      {
+        new: true
+      }
+    );
+
+    response.json(data);
+  } catch (error) {
+    // Output error to the console incase it fails to send in response
+    console.log(error);
+
+    if ("name" in error && error.name === "ValidationError")
+      return response.status(400).json(error.errors);
 
     return response.status(500).json(error.errors);
   }
